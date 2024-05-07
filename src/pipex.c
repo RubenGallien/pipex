@@ -1,23 +1,20 @@
 #include "pipex.h"
 
-int main(int ac, char *argv[])
+int	main(int ac, char **av,char **envp)
 {
-	int	i;
-	int	fd;
+	int	pipeline;
+	char **all_path;
 
-	i = 0;
-	fd = open("example.txt", O_WRONLY | O_CREAT, 0644);
-	dup2(fd, STDOUT_FILENO);
-	close(fd);
-	if (ac > 0)
+	if (!envp)
+		return (-1);
+	pipeline = ac - 4;
+	all_path = ft_split(find_env(envp) + ft_strlen("PATH="), ':');
+	int i = 0;
+	while (all_path[i])
 	{
-		printf("nb arg : %d\n", ac);
-		while (i < ac)
-		{
-			printf("%s\n",argv[i]);
-			i++;
-		}
+		ft_printf("%s\n", all_path[i]);
+		i++;
 	}
-
-	return (0);
+	ft_printf("nb_args = %d\n%s\n", pipeline, av[0]);
+	return (ft_free_tab(all_path), 0);
 }
