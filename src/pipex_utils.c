@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 18:18:28 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/07 19:13:40 by rgallien         ###   ########.fr       */
+/*   Created: 2024/05/08 11:38:59 by rgallien          #+#    #+#             */
+/*   Updated: 2024/05/08 12:29:21 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,15 @@ void	ft_free_tab(char **tab)
 	free(tab);
 }
 
-char *find_env(char **envp)
+char	*find_env(char **envp)
 {
-	char *str;
-	int	i;
-	int	j;
+	int		i;
 
 	i = 0;
-	while(envp[i])
+	while (envp[i])
 	{
-		j = 0;
-		while (envp[i][j] && envp[i][j] != '=')
-			j++;
-		str = ft_substr(envp[i], 0, j);
-		if (ft_strncmp(str, "PATH", ft_strlen("PATH")) == 0)
-			return (free(str), envp[i]);
-		free(str);
-		str = NULL;
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+			return (envp[i]);
 		i++;
 	}
 	return (NULL);
