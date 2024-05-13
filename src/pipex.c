@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/12 19:36:39 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:48:37 by rubengallie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,27 @@ void	ft_here_doc(char *end)
 int	main(int ac, char **av, char **envp)
 {
 	int		pipeline;
-	char	**all_path;
+
 	if (ac < 5)
 		return (0);
 	if (ft_strncmp("here_doc", av[1], 9) == 0)
 		ft_here_doc(av[2]);
 	pipeline = ac - 4;
-	all_path = ft_split(find_env(envp) + ft_strlen("PATH="), ':');
-	printf("%d\n", pipeline);
-	return (ft_free_tab(all_path), 0);
+	find_cmd(envp);
+	int pid = -1;
+    int id = -1;
+    while (pid && id < pipeline)
+    {
+        pid = fork();
+        id++;
+    }
+    while (pid && id > 0)
+    {
+        printf("hello from parent, id = %d, pid = %d\n", id, pid);
+        pid = wait(NULL);
+        id--;
+    }
+    if (!pid)
+        printf("hello from child %d, pid = %d \n", id, pid);
+	return (0);
 }

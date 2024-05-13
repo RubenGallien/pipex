@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:38:59 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/08 12:29:21 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:47:38 by rubengallie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,14 @@ void	ft_free_tab(char **tab)
 	free(tab);
 }
 
-char	*find_env(char **envp)
+char	*find_cmd(char **envp)
 {
 	int		i;
-
+	char	**all_path;
 	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (envp[i]);
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
-	}
+	all_path = ft_split(envp[i] + 6, ':');
+	printf("%s\n", all_path[0]);
 	return (NULL);
 }
