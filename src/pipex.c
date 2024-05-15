@@ -3,52 +3,80 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
+/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/13 17:48:37 by rubengallie      ###   ########.fr       */
+/*   Updated: 2024/05/15 18:40:51 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_here_doc(char *end)
+void	make_children(t_pipex *pipex)
 {
-	char *str;
+	pipex->id = -1;
+	pipex->pid = -1;
+	while (pipex->pid && pipex->id < pipex->n)
+	{
+		pipex->pid = fork();
+		pipex->id++;
+	}
+	while (pipex->pid && pipex->id > 0)
+	{
+		pipex->pid = wait(NULL);
+		pipex->id--;
+	}
+}
 
+void	ft_here_doc(char *end, t_pipex *pipex, int **fd)
+{
+	char	*str;
+
+	pipex->doc = 1;
+	pipex->n--;
 	str = get_next_line(0);
 	while (str && ft_strncmp(end, str, ft_strlen(str) - 1) != 0)
 	{
+		write(fd[pipex->n][1], str, ft_strlen(str));
 		free(str);
 		str = get_next_line(0);
 	}
-	free(str);
+	if (str)
+		free(str);
+	else
+	{
+		write(2, \
+		"bash: warning: here-document delimited by end-of-file (wanted `", 63);
+		write(2, end, ft_strlen(end));
+		write(2, "')\n", 3);
+	}
 }
 
 int	main(int ac, char **av, char **envp)
 {
-	int		pipeline;
+	t_pipex	pipex;
+	int		**fd;
 
+	(void)envp;
 	if (ac < 5)
-		return (0);
+		return (-1);
+	pipex.doc = 0;
+	pipex.n = ac - 4;
+	fd = pipeline(pipex.n);
 	if (ft_strncmp("here_doc", av[1], 9) == 0)
-		ft_here_doc(av[2]);
-	pipeline = ac - 4;
-	find_cmd(envp);
-	int pid = -1;
-    int id = -1;
-    while (pid && id < pipeline)
-    {
-        pid = fork();
-        id++;
-    }
-    while (pid && id > 0)
-    {
-        printf("hello from parent, id = %d, pid = %d\n", id, pid);
-        pid = wait(NULL);
-        id--;
-    }
-    if (!pid)
-        printf("hello from child %d, pid = %d \n", id, pid);
+		ft_here_doc(av[2], &pipex, fd);
+	make_children(&pipex);
+	if (pipex.pid)
+	{
+		close_pipeline(fd, pipex.n + pipex.doc);
+	}
+	if (!pipex.pid)
+	{
+		choose_pipe(fd, &pipex); // dup2
+		// exec_cmd (trouver le path + cmd + execve)
+		close_pipeline(fd, pipex.n + pipex.doc);
+	}
+	// ft_exec(av, envp, &pipex);
+	// find_cmd(envp, av[1]);
 	return (0);
 }

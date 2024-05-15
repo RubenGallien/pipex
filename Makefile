@@ -6,7 +6,7 @@
 #    By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/18 23:27:59 by rgallien          #+#    #+#              #
-#    Updated: 2024/05/07 18:18:47 by rgallien         ###   ########.fr        #
+#    Updated: 2024/05/15 15:01:23 by rgallien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ OBJ_DIR = obj
 
 SRCS	=	pipex.c \
 			pipex_utils.c \
+			exec.c \
 
 SRCS	:= $(SRCS:%=$(SRC_DIR)/%)
 OBJS	=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
