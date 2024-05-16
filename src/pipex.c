@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/15 18:40:51 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/16 11:22:43 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_here_doc(char *end, t_pipex *pipex, int **fd)
 		write(2, \
 		"bash: warning: here-document delimited by end-of-file (wanted `", 63);
 		write(2, end, ft_strlen(end));
-		write(2, "')\n", 3);
+		write(2, "')", 3);
 	}
 }
 
