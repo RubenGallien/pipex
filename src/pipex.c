@@ -3,14 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/16 11:22:43 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/18 17:55:03 by rubengallie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile)
+{
+	int	in;
+	int	out;
+
+	if (pipex->id == 0)
+	{
+		if (pipex->doc == 0)
+			dup2(fd[pipex->n][0], STDIN_FILENO);
+		else
+		{
+			in = open(infile, O_RDONLY);
+			dup2(in, STDIN_FILENO);
+		}
+		dup2(fd[pipex->id][1], STDOUT_FILENO);
+	}
+	else if (pipex->id == pipex->n)
+	{
+		if (!pipex->doc)
+			out = open(outfile, O_CREAT | O_TRUNC | O_WRONLY);
+		else
+			out = open(outfile, O_CREAT | O_APPEND | O_WRONLY);
+		dup2(fd[pipex->id - pipex->doc][0], STDIN_FILENO);
+		dup2(out, STDOUT_FILENO);
+	}
+	else
+		other_pipe(fd, pipex);
+}
+
+void	ft_wait(t_pipex pipex)
+{
+	int	i;
+
+	i = 0;
+	while (i < pipex.id)
+	{
+		wait(NULL);
+		i++;
+	}
+}
 
 void	make_children(t_pipex *pipex)
 {
@@ -69,14 +110,13 @@ int	main(int ac, char **av, char **envp)
 	if (pipex.pid)
 	{
 		close_pipeline(fd, pipex.n + pipex.doc);
+		ft_wait(pipex);
 	}
 	if (!pipex.pid)
 	{
-		choose_pipe(fd, &pipex); // dup2
-		// exec_cmd (trouver le path + cmd + execve)
+		choose_pipe(fd, &pipex, av[1], av[ac - 1]);
+		exec(av[pipex.id + 2 + pipex.doc], envp);
 		close_pipeline(fd, pipex.n + pipex.doc);
 	}
-	// ft_exec(av, envp, &pipex);
-	// find_cmd(envp, av[1]);
 	return (0);
 }

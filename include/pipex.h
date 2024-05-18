@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:39:14 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/15 15:27:45 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/18 17:55:15 by rubengallie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,18 @@
 
 typedef struct s_pipex
 {
-	int pid;
-	int id;
-	int doc;
+	int	pid;
+	int	id;
+	int	doc;
 	int	n;
 }	t_pipex;
 
-char	*find_cmd(char **envp, char *cmd);
+void	exec(char *cmds, char **envp);
+char **find_cmd(char **envp, char *cmd);
 void	ft_free_tab(char **tab);
 int		**pipeline(int n);
-void	choose_pipe(int **fd, t_pipex *pipex);
+void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile);
 void	close_pipeline(int **fd_end, int i);
+void	other_pipe(int **fd, t_pipex *pipex);
 
 #endif

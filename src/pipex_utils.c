@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:38:59 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/15 18:34:31 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/18 17:14:48 by rubengallie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	other_pipe(int **fd, t_pipex *pipex)
+{
+	dup2(fd[pipex->id - 1][0], STDIN_FILENO);
+	dup2(fd[pipex->id][1], STDOUT_FILENO);
+}
 
 void	close_pipeline(int **fd_end, int i)
 {
@@ -52,7 +58,7 @@ int	**pipeline(int n)
 	return (fd_end);
 }
 
-char	*find_cmd(char **envp, char *cmd)
+char	**find_cmd(char **envp, char *cmd)
 {
 	int		i;
 	char	**all_path;
@@ -68,5 +74,5 @@ char	*find_cmd(char **envp, char *cmd)
 		all_path[i] = ft_strjoin(all_path[i], cmd);
 	}
 	i = -1;
-	return (NULL);
+	return (all_path);
 }
