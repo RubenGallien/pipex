@@ -6,7 +6,7 @@
 /*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:39:14 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/18 17:55:15 by rubengallie      ###   ########.fr       */
+/*   Updated: 2024/05/19 00:11:05 by rubengallie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_pipex
 }	t_pipex;
 
 void	exec(char *cmds, char **envp);
-char **find_cmd(char **envp, char *cmd);
+char	**find_cmd(char **envp, char *cmd);
 void	ft_free_tab(char **tab);
 int		**pipeline(int n);
 void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile);

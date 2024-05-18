@@ -6,7 +6,7 @@
 /*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/18 17:55:03 by rubengallie      ###   ########.fr       */
+/*   Updated: 2024/05/19 00:02:06 by rubengallie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,23 @@ void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile)
 
 	if (pipex->id == 0)
 	{
-		if (pipex->doc == 0)
-			dup2(fd[pipex->n][0], STDIN_FILENO);
+		if (pipex->doc == 1)
+			dup2(fd[pipex->n][0], 0);
 		else
 		{
 			in = open(infile, O_RDONLY);
-			dup2(in, STDIN_FILENO);
+			dup2(in, 0);
 		}
-		dup2(fd[pipex->id][1], STDOUT_FILENO);
+		dup2(fd[pipex->id][1], 1);
 	}
 	else if (pipex->id == pipex->n)
 	{
 		if (!pipex->doc)
-			out = open(outfile, O_CREAT | O_TRUNC | O_WRONLY);
+			out = open(outfile, O_CREAT | O_TRUNC | O_WRONLY, 0777);
 		else
-			out = open(outfile, O_CREAT | O_APPEND | O_WRONLY);
-		dup2(fd[pipex->id - pipex->doc][0], STDIN_FILENO);
-		dup2(out, STDOUT_FILENO);
+			out = open(outfile, O_CREAT | O_APPEND | O_WRONLY, 0777);
+		dup2(fd[pipex->id - 1][0], 0);
+		dup2(out, 1);
 	}
 	else
 		other_pipe(fd, pipex);
