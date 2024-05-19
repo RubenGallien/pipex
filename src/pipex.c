@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
+/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/19 00:02:06 by rubengallie      ###   ########.fr       */
+/*   Updated: 2024/05/19 16:28:54 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,9 @@ int	main(int ac, char **av, char **envp)
 	t_pipex	pipex;
 	int		**fd;
 
-	(void)envp;
 	if (ac < 5)
-		return (-1);
+		return (0);
+	pipex.err = 0;
 	pipex.doc = 0;
 	pipex.n = ac - 4;
 	fd = pipeline(pipex.n);
@@ -115,8 +115,8 @@ int	main(int ac, char **av, char **envp)
 	if (!pipex.pid)
 	{
 		choose_pipe(fd, &pipex, av[1], av[ac - 1]);
-		exec(av[pipex.id + 2 + pipex.doc], envp);
+		exec(av[pipex.id + 2 + pipex.doc], envp, pipex);
 		close_pipeline(fd, pipex.n + pipex.doc);
 	}
-	return (0);
+	return (pipex.err);
 }
