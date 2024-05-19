@@ -1,9 +1,0 @@
-Makefile
-include
-infile
-libft
-libft.a
-obj
-outfile
-pipex
-src
