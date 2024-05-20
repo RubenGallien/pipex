@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/19 16:28:54 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:02:48 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,40 +17,45 @@ void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile)
 	int	in;
 	int	out;
 
+	in = -1;
+	out = -1;
 	if (pipex->id == 0)
 	{
 		if (pipex->doc == 1)
-			dup2(fd[pipex->n][0], 0);
+			in = fd[pipex->n][0];
 		else
-		{
 			in = open(infile, O_RDONLY);
-			dup2(in, 0);
-		}
+		dup2(in, 0);
 		dup2(fd[pipex->id][1], 1);
 	}
 	else if (pipex->id == pipex->n)
 	{
 		if (!pipex->doc)
-			out = open(outfile, O_CREAT | O_TRUNC | O_WRONLY, 0777);
+			out = open(outfile, O_CREAT | O_TRUNC | O_WRONLY, 0666);
 		else
-			out = open(outfile, O_CREAT | O_APPEND | O_WRONLY, 0777);
+			out = open(outfile, O_CREAT | O_APPEND | O_WRONLY, 0666);
 		dup2(fd[pipex->id - 1][0], 0);
 		dup2(out, 1);
 	}
 	else
 		other_pipe(fd, pipex);
+	close(out);
+	close(in);
 }
 
-void	ft_wait(t_pipex pipex)
+int	ft_wait(t_pipex pipex)
 {
-	int	i;
+	int	status;
+	int	r;
 
-	i = 0;
-	while (i < pipex.id)
+	r = 0;
+	while (pipex.id >= 0)
 	{
-		wait(NULL);
-		i++;
+		if (pipex.pid == wait(&status))
+			r = WEXITSTATUS(status);
+		pipex.id--;
 	}
+	return (r);
 }
 
 void	make_children(t_pipex *pipex)
@@ -61,11 +66,6 @@ void	make_children(t_pipex *pipex)
 	{
 		pipex->pid = fork();
 		pipex->id++;
-	}
-	while (pipex->pid && pipex->id > 0)
-	{
-		pipex->pid = wait(NULL);
-		pipex->id--;
 	}
 }
 
@@ -98,10 +98,13 @@ int	main(int ac, char **av, char **envp)
 	t_pipex	pipex;
 	int		**fd;
 
-	if (ac < 5)
+	if (ft_strncmp("here_doc", av[1], 9) == 0)
+		pipex.doc = 1;
+	else
+		pipex.doc = 0;
+	if (ac - pipex.doc < 5)
 		return (0);
 	pipex.err = 0;
-	pipex.doc = 0;
 	pipex.n = ac - 4;
 	fd = pipeline(pipex.n);
 	if (ft_strncmp("here_doc", av[1], 9) == 0)
@@ -110,13 +113,14 @@ int	main(int ac, char **av, char **envp)
 	if (pipex.pid)
 	{
 		close_pipeline(fd, pipex.n + pipex.doc);
-		ft_wait(pipex);
+		return (ft_wait(pipex));
 	}
 	if (!pipex.pid)
 	{
 		choose_pipe(fd, &pipex, av[1], av[ac - 1]);
-		exec(av[pipex.id + 2 + pipex.doc], envp, pipex);
 		close_pipeline(fd, pipex.n + pipex.doc);
+		permissions(av[1], av[ac - 1], pipex);
+		exec(av[pipex.id + 2 + pipex.doc], envp);
 	}
-	return (pipex.err);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:39:14 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/19 16:29:16 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/20 17:29:22 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,16 @@ typedef struct s_pipex
 	int	id;
 	int	doc;
 	int	n;
-	int err;
+	int	err;
 }	t_pipex;
 
-void	exec(char *cmds, char **envp, t_pipex pipex);
+void	exec(char *cmds, char **envp);
 char	**find_cmd(char **envp, char *cmd);
 void	ft_free_tab(char **tab);
 int		**pipeline(int n);
 void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile);
 void	close_pipeline(int **fd_end, int i);
 void	other_pipe(int **fd, t_pipex *pipex);
+void	permissions(char *infile, char *outfile, t_pipex pipex); 
 
 #endif

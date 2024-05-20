@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubengallien <rubengallien@student.42.f    +#+  +:+       +#+        */
+/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:38:59 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/18 17:14:48 by rubengallie      ###   ########.fr       */
+/*   Updated: 2024/05/20 14:19:59 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

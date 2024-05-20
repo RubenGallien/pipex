@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgallien <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:44:53 by rgallien          #+#    #+#             */
-/*   Updated: 2023/11/15 15:06:42 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/20 16:02:00 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,9 @@ char	*ft_strrchr(const char *s, int c)
 	}
 	return (NULL);
 }
-/*
-int main()
-{
-		printf("%s\n", ft_strrchr("bonjour", 'o'));
-		printf("%s\n", strrchr("bonjour", 'o'));
-		return (0);
-}
-*/
+// int main()
+// {
+// 		printf("%s\n", ft_strrchr("bonjour", 'o'));
+// 		printf("%s\n", strrchr("bonjour", 'o'));
+// 		return (0);
+// }
