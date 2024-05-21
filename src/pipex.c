@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/20 18:02:48 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:54:13 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile)
 	}
 	else
 		other_pipe(fd, pipex);
-	close(out);
-	close(in);
+	if (out >= 0)
+		close(out);
+	if (in >= 0)
+		close(in);
 }
 
 int	ft_wait(t_pipex pipex)
@@ -95,9 +97,14 @@ void	ft_here_doc(char *end, t_pipex *pipex, int **fd)
 
 int	main(int ac, char **av, char **envp)
 {
+	ft_printf("argc = %d", ac);
+	exit(0);
 	t_pipex	pipex;
 	int		**fd;
 
+	ft_printf("argc = %d", ac);
+	write(1, "hello", 5);
+	exit(0);
 	if (ft_strncmp("here_doc", av[1], 9) == 0)
 		pipex.doc = 1;
 	else

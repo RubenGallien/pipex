@@ -30,9 +30,10 @@ void	ft_free_tab(char **tab)
 	int	i;
 
 	i = -1;
-	while (tab[++i])
+	while (tab && tab[++i])
 		free(tab[i]);
-	free(tab);
+	if (tab)
+		free(tab);
 }
 
 int	**pipeline(int n)

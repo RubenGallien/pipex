@@ -6,11 +6,22 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 15:00:22 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/20 18:03:01 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:20:45 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	check_null(char **cmd, char **all_path)
+{
+	if (!ft_strncmp(cmd[0], " ", 1))
+	{
+		ft_putstr_fd("command not found: ", 2);
+		ft_free_tab(cmd);
+		ft_free_tab(all_path);
+		exit(0);
+	}
+}
 
 void	permissions(char *infile, char *outfile, t_pipex pipex)
 {
@@ -27,16 +38,23 @@ void	permissions(char *infile, char *outfile, t_pipex pipex)
 void	ft_access(char **all_path, char **cmd, char **envp)
 {
 	int		i;
+	char *path;
 
 	i = 0;
 	while (all_path[i])
 	{
 		if (!access(all_path[i], F_OK | X_OK))
-			execve(all_path[i], cmd, envp);
+		{
+			path = ft_strdup(all_path[i]);
+			ft_free_tab(all_path);
+			execve(path, cmd, envp);
+		}
 		i++;
 	}
-	ft_putstr_fd("pipex: command not found: ", 2);
+	ft_putstr_fd("command not found: ", 2);
 	ft_putendl_fd(cmd[0], 2);
+	ft_free_tab(cmd);
+	ft_free_tab(all_path);
 	exit(0);
 }
 
@@ -47,20 +65,24 @@ void	exec(char *cmds, char **envp)
 
 	all_path = NULL;
 	cmd = ft_split(cmds, ' ');
-	if (!ft_strchr(cmd[0], '/'))
+	if (cmd && cmd[0] && !ft_strchr(cmd[0], '/'))
 	{
 		all_path = find_cmd(envp, cmd[0]);
 		ft_access(all_path, cmd, envp);
 	}
 	else
 	{
-		if (!access(cmd[0], F_OK | X_OK))
+		if (cmd && cmd[0] && !access(cmd[0], F_OK | X_OK))
 			execve(cmd[0], cmd, envp);
-		else
+		else if (cmd && cmd[0])
 		{
-			ft_putstr_fd("pipex: command not found: ", 2);
+			ft_putstr_fd("No such file or directory :", 2);
 			ft_putendl_fd(cmd[0], 2);
-			exit(0);
 		}
+		else
+			ft_putstr_fd("command not found:\n", 2);
+		ft_free_tab(all_path);
+		ft_free_tab(cmd);
+		exit(0);
 	}
 }
