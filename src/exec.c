@@ -6,11 +6,20 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 15:00:22 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/21 16:20:45 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/22 13:58:26 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	init_here_doc(t_pipex *pipex, char **av)
+{
+	(void)pipex;
+	if (av[1] && ft_strncmp("here_doc", av[1], 9) == 0)
+		pipex->doc = 1;
+	else
+		pipex->doc = 0;
+}
 
 void	check_null(char **cmd, char **all_path)
 {
@@ -29,9 +38,15 @@ void	permissions(char *infile, char *outfile, t_pipex pipex)
 	if (pipex.doc == 0)
 	{
 		if (pipex.id == 0 && access(infile, R_OK))
+		{
+			ft_putstr_fd("Permission denied", 2);
 			exit(0);
+		}
 		if (pipex.n == pipex.id && access(outfile, W_OK))
+		{
+			ft_putstr_fd("Permission denied", 2);
 			exit(0);
+		}
 	}
 }
 
@@ -41,7 +56,7 @@ void	ft_access(char **all_path, char **cmd, char **envp)
 	char *path;
 
 	i = 0;
-	while (all_path[i])
+	while (envp && all_path[i])
 	{
 		if (!access(all_path[i], F_OK | X_OK))
 		{
@@ -55,7 +70,7 @@ void	ft_access(char **all_path, char **cmd, char **envp)
 	ft_putendl_fd(cmd[0], 2);
 	ft_free_tab(cmd);
 	ft_free_tab(all_path);
-	exit(0);
+	exit(127);
 }
 
 void	exec(char *cmds, char **envp)
@@ -83,6 +98,6 @@ void	exec(char *cmds, char **envp)
 			ft_putstr_fd("command not found:\n", 2);
 		ft_free_tab(all_path);
 		ft_free_tab(cmd);
-		exit(0);
+		exit(127);
 	}
 }

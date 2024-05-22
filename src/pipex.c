@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/21 16:54:13 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/22 13:57:35 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,18 +97,10 @@ void	ft_here_doc(char *end, t_pipex *pipex, int **fd)
 
 int	main(int ac, char **av, char **envp)
 {
-	ft_printf("argc = %d", ac);
-	exit(0);
 	t_pipex	pipex;
 	int		**fd;
 
-	ft_printf("argc = %d", ac);
-	write(1, "hello", 5);
-	exit(0);
-	if (ft_strncmp("here_doc", av[1], 9) == 0)
-		pipex.doc = 1;
-	else
-		pipex.doc = 0;
+	init_here_doc(&pipex, av);
 	if (ac - pipex.doc < 5)
 		return (0);
 	pipex.err = 0;
