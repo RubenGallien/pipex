@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 15:00:22 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/22 13:58:26 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/22 18:22:38 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void	permissions(char *infile, char *outfile, t_pipex pipex)
 		if (pipex.id == 0 && access(infile, R_OK))
 		{
 			ft_putstr_fd("Permission denied", 2);
-			exit(0);
+			exit(1);
 		}
 		if (pipex.n == pipex.id && access(outfile, W_OK))
 		{
 			ft_putstr_fd("Permission denied", 2);
-			exit(0);
+			exit(1);
 		}
 	}
 }
@@ -53,7 +53,7 @@ void	permissions(char *infile, char *outfile, t_pipex pipex)
 void	ft_access(char **all_path, char **cmd, char **envp)
 {
 	int		i;
-	char *path;
+	char	*path;
 
 	i = 0;
 	while (envp && all_path[i])
