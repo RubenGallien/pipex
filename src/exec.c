@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 15:00:22 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/22 18:22:38 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/23 13:30:02 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	check_null(char **cmd, char **all_path)
 		ft_putstr_fd("command not found: ", 2);
 		ft_free_tab(cmd);
 		ft_free_tab(all_path);
-		exit(0);
+		exit(127);
 	}
 }
 
@@ -42,11 +42,11 @@ void	permissions(char *infile, char *outfile, t_pipex pipex)
 			ft_putstr_fd("Permission denied", 2);
 			exit(1);
 		}
-		if (pipex.n == pipex.id && access(outfile, W_OK))
-		{
-			ft_putstr_fd("Permission denied", 2);
-			exit(1);
-		}
+	}
+	if (pipex.n == pipex.id && access(outfile, W_OK))
+	{
+		ft_putstr_fd("Permission denied", 2);
+		exit(1);
 	}
 }
 
@@ -56,7 +56,7 @@ void	ft_access(char **all_path, char **cmd, char **envp)
 	char	*path;
 
 	i = 0;
-	while (envp && all_path[i])
+	while (all_path && all_path[i])
 	{
 		if (!access(all_path[i], F_OK | X_OK))
 		{
@@ -87,7 +87,7 @@ void	exec(char *cmds, char **envp)
 	}
 	else
 	{
-		if (cmd && cmd[0] && !access(cmd[0], F_OK | X_OK))
+		if (cmd && cmd[0] && check_access(cmd, all_path))
 			execve(cmd[0], cmd, envp);
 		else if (cmd && cmd[0])
 		{

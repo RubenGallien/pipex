@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:37:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/22 13:57:35 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/23 13:19:28 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,7 @@ void	choose_pipe(int **fd, t_pipex *pipex, char *infile, char *outfile)
 		dup2(fd[pipex->id - 1][0], 0);
 		dup2(out, 1);
 	}
-	else
-		other_pipe(fd, pipex);
-	if (out >= 0)
-		close(out);
-	if (in >= 0)
-		close(in);
+	other_pipe(fd, pipex, in, out);
 }
 
 int	ft_wait(t_pipex pipex)
@@ -78,7 +73,7 @@ void	ft_here_doc(char *end, t_pipex *pipex, int **fd)
 	pipex->doc = 1;
 	pipex->n--;
 	str = get_next_line(0);
-	while (str && ft_strncmp(end, str, ft_strlen(str) - 1) != 0)
+	while (str && ft_strncmp(end, str, count_hd(str, end)) != 0)
 	{
 		write(fd[pipex->n][1], str, ft_strlen(str));
 		free(str);
@@ -102,7 +97,7 @@ int	main(int ac, char **av, char **envp)
 
 	init_here_doc(&pipex, av);
 	if (ac - pipex.doc < 5)
-		return (0);
+		return (1);
 	pipex.err = 0;
 	pipex.n = ac - 4;
 	fd = pipeline(pipex.n);

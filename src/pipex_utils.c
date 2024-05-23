@@ -6,16 +6,23 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:38:59 by rgallien          #+#    #+#             */
-/*   Updated: 2024/05/20 14:19:59 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/05/23 13:13:00 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	other_pipe(int **fd, t_pipex *pipex)
+void	other_pipe(int **fd, t_pipex *pipex, int in, int out)
 {
-	dup2(fd[pipex->id - 1][0], STDIN_FILENO);
-	dup2(fd[pipex->id][1], STDOUT_FILENO);
+	if (out >= 0)
+		close(out);
+	if (in >= 0)
+		close(in);
+	if (pipex->id != 0 && pipex->id != pipex->n)
+	{
+		dup2(fd[pipex->id - 1][0], STDIN_FILENO);
+		dup2(fd[pipex->id][1], STDOUT_FILENO);
+	}
 }
 
 void	close_pipeline(int **fd_end, int i)
@@ -67,9 +74,12 @@ char	**find_cmd(char **envp, char *cmd)
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
-	all_path = ft_split(envp[i] + 6, ':');
+	if (envp[i])
+		all_path = ft_split(envp[i] + 6, ':');
+	else
+		all_path = NULL;
 	i = -1;
-	while (all_path[++i])
+	while (all_path && all_path[++i])
 	{
 		all_path[i] = ft_strjoin(all_path[i], "/");
 		all_path[i] = ft_strjoin(all_path[i], cmd);
